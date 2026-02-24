@@ -1,0 +1,19 @@
+{
+  "name": "the-timeline",
+  "version": "1.0.0",
+  "description": "Assignment: The Timeline\r By: Andres van den Bos Mendoza",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^4.0.1",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
