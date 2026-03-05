@@ -26,13 +26,14 @@
                   <form action="/posts" method="POST">
                     <div class="mb-3">
                       <label for="postInput" class="form-label">What's on your mind?</label>
-                      <textarea 
-                        class="form-control" 
-                        id="postInput" 
-                        name="post" 
-                        rows="4" 
+                      <textarea
+                        class="form-control"
+                        id="postInput"
+                        name="post"
+                        rows="4"
                         placeholder="Write your post here (minimum 25 characters)..."
                         required
+                        minlength="25"
                       ></textarea>
                       <small class="form-text text-muted">Minimum 25 characters required</small>
                     </div>
@@ -57,8 +58,8 @@
                         </span>
                         <div class="btn-group btn-group-sm" role="group">
                           <!-- Edit Button -->
-                          <button 
-                            type="button" 
+                          <button
+                            type="button"
                             class="btn btn-outline-warning"
                             data-bs-toggle="modal"
                             data-bs-target="#editModal"
@@ -68,11 +69,11 @@
                           >
                             ✏️ Edit
                           </button>
-                          
+
                           <!-- Delete Button -->
-                          <form 
-                            action="/posts/<%= post._id %>?_method=DELETE" 
-                            method="POST" 
+                          <form
+                            action="/posts/<%= post._id %>?_method=DELETE"
+                            method="POST"
                             style="display: inline;"
                             onsubmit="return confirm('Are you sure you want to delete this post?')"
                           >
@@ -85,6 +86,32 @@
 
                       <!-- Post Content -->
                       <p class="card-text mb-0"><%= post.post %></p>
+
+                      <!-- Comments section -->
+                      <hr class="my-3" />
+                      <h6 class="text-muted mb-2">Comments</h6>
+                      <% if (post.comments && post.comments.length > 0) { %>
+                        <% post.comments.forEach(function(comment) { %>
+                          <div class="border-start border-secondary border-2 ps-2 mb-2 small">
+                            <span class="text-muted"><%= new Date(comment.createdAt).toLocaleString() %></span>
+                            <p class="mb-0 mt-1"><%= comment.content %></p>
+                          </div>
+                        <% }); %>
+                      <% } else { %>
+                        <p class="text-muted small mb-2">No comments yet.</p>
+                      <% } %>
+                      <form action="/posts/<%= post._id %>/comments" method="POST" class="mt-2">
+                        <textarea
+                          class="form-control form-control-sm"
+                          name="content"
+                          rows="2"
+                          placeholder="Write a comment (minimum 25 characters)..."
+                          required
+                          minlength="25"
+                        ></textarea>
+                        <small class="form-text text-muted">Minimum 25 characters</small>
+                        <button type="submit" class="btn btn-sm btn-outline-secondary mt-1">Add Comment</button>
+                      </form>
                     </div>
                   </div>
                 <% }); %>
@@ -106,12 +133,13 @@
                 <div class="modal-body">
                   <div class="mb-3">
                     <label for="editPostInput" class="form-label">Edit your post</label>
-                    <textarea 
-                      class="form-control" 
-                      id="editPostInput" 
-                      name="post" 
+                    <textarea
+                      class="form-control"
+id="editPostInput"
+                      name="post"
                       rows="4"
                       required
+                      minlength="25"
                     ></textarea>
                     <small class="form-text text-muted">Minimum 25 characters required</small>
                   </div>
@@ -127,16 +155,16 @@
 
         <!-- Bootstrap JS for Modal Functionality -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-        
+
         <!-- JavaScript for Edit Form Handler -->
         <script>
           function prepareEditForm(button) {
             const postId = button.getAttribute('data-post-id');
             const postText = button.getAttribute('data-post-text');
-            
+
             // Fill the modal textarea with the current post text
             document.getElementById('editPostInput').value = postText;
-            
+
             // Update the form action to the correct route with PUT method
             const editForm = document.getElementById('editForm');
             editForm.action = `/posts/${postId}?_method=PUT`;
