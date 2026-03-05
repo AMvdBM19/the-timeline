@@ -134,7 +134,7 @@ app.delete('/posts/:id', async (req, res) => {
 });
 
 //Mongo Db connection
-mongoose.connect('mongodb://localhost:27017/the-timeline')
+mongoose.connect('mongodb+srv://andresmarcel19_db_user:1ueDQo3CuRrGiVBy@cluster0.hgwlpj3.mongodb.net/the-timeline?retryWrites=true&w=majority')
   .then(() => {
     app.listen(PORT, () => {
       console.log(`✅ MongoDB connected!`);
