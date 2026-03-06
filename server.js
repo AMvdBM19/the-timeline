@@ -1,9 +1,11 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const methodOverride = require('express-method-override');  // NEW: For PUT/DELETE via HTML forms
 const Post = require('./models/Post');
 const Comment = require('./models/Comment');
+const apiRoutes = require('./routes/api');
 
 const app = express();
 app.set('view engine', 'ejs');
@@ -14,6 +16,9 @@ const PORT = 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
+
+// API routes (controller)
+app.use(apiRoutes);
 
 // Read all posts with their comments
 app.get('/', async (req, res) => {
@@ -133,8 +138,9 @@ app.delete('/posts/:id', async (req, res) => {
   }
 });
 
-//Mongo Db connection
-mongoose.connect('mongodb://localhost:27017/the-timeline')
+//Mongo Db connection (use .env MONGODB_URI for Atlas, or localhost)
+const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/the-timeline';
+mongoose.connect(mongoUri)
   .then(() => {
     app.listen(PORT, () => {
       console.log(`✅ MongoDB connected!`);
