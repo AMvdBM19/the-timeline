@@ -41,7 +41,11 @@ exports.postOnePost = async (req, res) => {
       });
     }
 
-    const newPost = new Post({ post: post.trim() });
+    const newPost = new Post({
+      post: post.trim(),
+      userId: req.user.id,
+      authorName: `${req.user.firstName} ${req.user.lastName}`
+    });
     await newPost.save();
 
     res.status(201).json({
@@ -237,7 +241,9 @@ exports.postOneComment = async (req, res) => {
 
     const newComment = new Comment({
       content: content.trim(),
-      postId
+      postId,
+      userId: req.user.id,
+      authorName: `${req.user.firstName} ${req.user.lastName}`
     });
     await newComment.save();
 

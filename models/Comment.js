@@ -6,11 +6,20 @@ const commentSchema = new Schema(
     content: {
       type: String,
       required: true,
-      minlength: [25, "Comment should be minimum 25 characters"]
+      minlength: [25, 'Comment should be minimum 25 characters']
     },
     postId: {
       type: Schema.Types.ObjectId,
       ref: 'Post',
+      required: true
+    },
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
+    authorName: {
+      type: String,
       required: true
     }
   },
@@ -19,3 +28,4 @@ const commentSchema = new Schema(
 
 const Comment = mongoose.model('Comment', commentSchema);
 module.exports = Comment;
+

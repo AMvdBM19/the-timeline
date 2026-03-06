@@ -12,35 +12,58 @@
       </head>
       <body class="bg-light">
         <div class="container py-5">
-          <h1 class="mb-4 text-center">The Timeline</h1>
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0">The Timeline</h1>
+            <div>
+              <% if (user) { %>
+                <span class="me-3">
+                  Welcome
+                  <strong><%= user.firstName %> <%= user.lastName %></strong>
+                </span>
+                <form action="/logout" method="POST" style="display: inline;">
+                  <button type="submit" class="btn btn-outline-danger btn-sm">Log out</button>
+                </form>
+              <% } else { %>
+                <a href="/login" class="btn btn-outline-primary btn-sm">Login / Register</a>
+              <% } %>
+            </div>
+          </div>
 
           <div class="row justify-content-center">
             <div class="col-lg-8">
 
               <!-- CREATE POST FORM -->
-              <div class="card mb-4 shadow-sm border-primary">
-                <div class="card-header bg-primary text-white">
-                  <h5 class="mb-0">Create a New Post</h5>
+              <% if (user) { %>
+                <div class="card mb-4 shadow-sm border-primary">
+                  <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Post a message</h5>
+                  </div>
+                  <div class="card-body">
+                    <form action="/posts" method="POST">
+                      <div class="mb-3">
+                        <label for="postInput" class="form-label">What's on your mind?</label>
+                        <textarea
+                          class="form-control"
+                          id="postInput"
+                          name="post"
+                          rows="4"
+                          placeholder="Write your post here (minimum 25 characters)..."
+                          required
+                          minlength="25"
+                        ></textarea>
+                        <small class="form-text text-muted">Minimum 25 characters required</small>
+                      </div>
+                      <button type="submit" class="btn btn-primary">Post</button>
+                    </form>
+                  </div>
                 </div>
-                <div class="card-body">
-                  <form action="/posts" method="POST">
-                    <div class="mb-3">
-                      <label for="postInput" class="form-label">What's on your mind?</label>
-                      <textarea
-                        class="form-control"
-                        id="postInput"
-                        name="post"
-                        rows="4"
-                        placeholder="Write your post here (minimum 25 characters)..."
-                        required
-                        minlength="25"
-                      ></textarea>
-                      <small class="form-text text-muted">Minimum 25 characters required</small>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Post</button>
-                  </form>
+              <% } else { %>
+                <div class="alert alert-info text-center mb-4">
+                  Unauthenticated users can only view posts.
+                  <a href="/login" class="alert-link">Login or register</a>
+                  to create posts and comments.
                 </div>
-              </div>
+              <% } %>
 
               <!-- DISPLAY ALL POSTS -->
               <% if (posts.length === 0) { %>
@@ -55,6 +78,8 @@
                       <div class="d-flex justify-content-between align-items-center mb-2">
                         <span class="text-muted small">
                           <%= new Date(post.createdAt).toLocaleString() %>
+                          &middot;
+                          <strong><%= post.authorName || 'Unknown user' %></strong>
                         </span>
                         <div class="btn-group btn-group-sm" role="group">
                           <!-- Edit Button -->
@@ -93,25 +118,36 @@
                       <% if (post.comments && post.comments.length > 0) { %>
                         <% post.comments.forEach(function(comment) { %>
                           <div class="border-start border-secondary border-2 ps-2 mb-2 small">
-                            <span class="text-muted"><%= new Date(comment.createdAt).toLocaleString() %></span>
+                            <span class="text-muted">
+                              <%= new Date(comment.createdAt).toLocaleString() %>
+                              &middot;
+                              <strong><%= comment.authorName || 'Unknown user' %></strong>
+                            </span>
                             <p class="mb-0 mt-1"><%= comment.content %></p>
                           </div>
                         <% }); %>
                       <% } else { %>
                         <p class="text-muted small mb-2">No comments yet.</p>
                       <% } %>
-                      <form action="/posts/<%= post._id %>/comments" method="POST" class="mt-2">
-                        <textarea
-                          class="form-control form-control-sm"
-                          name="content"
-                          rows="2"
-                          placeholder="Write a comment (minimum 25 characters)..."
-                          required
-                          minlength="25"
-                        ></textarea>
-                        <small class="form-text text-muted">Minimum 25 characters</small>
-                        <button type="submit" class="btn btn-sm btn-outline-secondary mt-1">Add Comment</button>
-                      </form>
+
+                      <% if (user) { %>
+                        <form action="/posts/<%= post._id %>/comments" method="POST" class="mt-2">
+                          <textarea
+                            class="form-control form-control-sm"
+                            name="content"
+                            rows="2"
+                            placeholder="Write a comment (minimum 25 characters)..."
+                            required
+                            minlength="25"
+                          ></textarea>
+                          <small class="form-text text-muted">Minimum 25 characters</small>
+                          <button type="submit" class="btn btn-sm btn-outline-secondary mt-1">Add Comment</button>
+                        </form>
+                      <% } else { %>
+                        <p class="text-muted small mt-2">
+                          <a href="/login">Login</a> to add a comment.
+                        </p>
+                      <% } %>
                     </div>
                   </div>
                 <% }); %>
