@@ -7,6 +7,7 @@ const methodOverride = require('express-method-override');  // NEW: For PUT/DELE
 const Post = require('./models/Post');
 const Comment = require('./models/Comment');
 const apiRoutes = require('./routes/api');
+const feedRoutes = require('./routes/feed');
 const authController = require('./controllers/authController');
 const { attachUser, requireAuth } = require('./middleware/auth');
 
@@ -30,6 +31,9 @@ app.post('/logout', authController.logout);
 
 // API routes (controller)
 app.use(apiRoutes);
+
+// Feed routes for /feed pages
+app.use(feedRoutes);
 
 // Read all posts with their comments
 app.get('/', async (req, res) => {

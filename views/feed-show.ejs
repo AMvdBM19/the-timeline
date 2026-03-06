@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Show One Feed</title>
+  </head>
+  <body>
+    <h1>Welcome To Facebook</h1>
+    <h2>/feed/<%= post._id %></h2>
+
+    <article>
+      <h3><%= post.name %></h3>
+      <p><%= post.message %></p>
+      <small><%= new Date(post.createdAt).toLocaleDateString() %></small>
+    </article>
+
+    <form action="/feed/<%= post._id %>/delete" method="POST" style="display:inline;">
+      <button type="submit">Delete</button>
+    </form>
+
+    <a href="/feed/edit/<%= post._id %>">Edit Post</a>
+
+    <p><a href="/feed">Back to feed</a></p>
+  </body>
+</html>
+

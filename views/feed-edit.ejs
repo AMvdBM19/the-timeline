@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Edit Feed Post</title>
+  </head>
+  <body>
+    <h1>Edit a Post</h1>
+    <h2>/feed/edit/<%= post._id %></h2>
+
+    <% if (errors && errors.length > 0) { %>
+      <ul style="color:red;">
+        <% errors.forEach(function (err) { %>
+          <li><%= err %></li>
+        <% }) %>
+      </ul>
+    <% } %>
+
+    <form action="/feed/edit/<%= post._id %>" method="POST">
+      <div>
+        <label for="name">Name</label>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          maxlength="15"
+          value="<%= post.name %>"
+          required
+        />
+      </div>
+      <div>
+        <label for="message">Message</label>
+        <input
+          id="message"
+          name="message"
+          type="text"
+          maxlength="40"
+          value="<%= post.message %>"
+          required
+        />
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+
+    <p><a href="/feed/<%= post._id %>">Cancel and go back</a></p>
+  </body>
+</html>
+

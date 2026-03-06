@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Feed - Welcome to Facebook</title>
+  </head>
+  <body>
+    <h1>Welcome To Facebook</h1>
+    <h2>/feed</h2>
+
+    <h3>Add a Post</h3>
+    <% if (errors && errors.length > 0) { %>
+      <ul style="color:red;">
+        <% errors.forEach(function (err) { %>
+          <li><%= err %></li>
+        <% }) %>
+      </ul>
+    <% } %>
+
+    <form action="/feed" method="POST">
+      <div>
+        <label for="name">Name</label>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          maxlength="15"
+          value="<%= (old && old.name) ? old.name : '' %>"
+          required
+        />
+      </div>
+      <div>
+        <label for="message">Message</label>
+        <input
+          id="message"
+          name="message"
+          type="text"
+          maxlength="40"
+          value="<%= (old && old.message) ? old.message : '' %>"
+          required
+        />
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+
+    <hr />
+
+    <h3>Feed</h3>
+    <% if (!posts || posts.length === 0) { %>
+      <p>No posts yet.</p>
+    <% } else { %>
+      <% posts.forEach(function (post) { %>
+        <article>
+          <h4><%= post.name %></h4>
+          <p><%= post.message %></p>
+          <small><%= new Date(post.createdAt).toLocaleDateString() %></small>
+          <div>
+            <a href="/feed/<%= post._id %>">See More</a>
+          </div>
+        </article>
+        <hr />
+      <% }) %>
+    <% } %>
+  </body>
+</html>
+
